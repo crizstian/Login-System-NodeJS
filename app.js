@@ -25,7 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // Handle File Uploads
-app.use(multer({dest:'./uploads'}));
+// app.use(multer({dest:'./uploads'}));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -44,7 +44,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Validator
+// // Validator
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
       var namespace = param.split('.')
@@ -61,7 +61,7 @@ app.use(expressValidator({
     };
   }
 }));
-
+//
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
