@@ -89,11 +89,12 @@ router.route('/login')
     	'title': 'Login'
     });
   })
-  .post(passport.authenticate('local',{failureRedirect:'/users/login', failureFlash:'Invalid username or password'}),(req, res) =>{
-  	console.log('Authentication Successful');
-  	req.flash('success', 'You are logged in');
-  	res.redirect('/');
-  });
+  .post(passport.authenticate('local',
+        { successRedirect: '/',
+         failureRedirect: '/users/login',
+         failureFlash: true
+       })
+);
 
 router.get('/logout', (req, res) => {
 	req.logout();
@@ -101,14 +102,12 @@ router.get('/logout', (req, res) => {
 	res.redirect('/users/login');
 });
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
+passport.serializeUser(function(user, done) {
+  done(null, user);
 });
 
-passport.deserializeUser((id, done) => {
-  User.getUserById(id, (err, user) => {
-    done(err, user);
-  });
+passport.deserializeUser(function(user, done) {
+  done(null, user);
 });
 
 passport.use(new LocalStrategy(
@@ -120,7 +119,7 @@ passport.use(new LocalStrategy(
 				return done(null, false,{message: 'Unknown User'});
 			}
 
-			User.comparePassword(password, user.password,(err, isMatch) => {
+			User.comparePassword(password, user[0].password,(err, isMatch) => {
 				if(err) throw err;
 				if(isMatch){
 					return done(null, user);
